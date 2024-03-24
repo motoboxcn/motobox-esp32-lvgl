@@ -1,8 +1,8 @@
 #include <TFT_eSPI.h>
+// #include "../lib/TFT_eSPI/User_Setup.h"
 #include "../ui/ui.h"
 
 #define SPEED_LOG 0
-/*Change to your screen resolution*/
 static const uint16_t screenWidth = TFT_HEIGHT;
 static const uint16_t screenHeight = TFT_WIDTH;
 
@@ -106,7 +106,8 @@ void LVSetup()
     lv_init();
 
     tft.begin();        // 初始化 TFT
-    tft.setRotation(3); // 设置为横屏模式
+    tft.setRotation(1); // 设置为横屏模式
+    // tft.fillScreen(TFT_WHITE);
 
     lv_disp_draw_buf_init(&draw_buf, buf, NULL, screenWidth * screenHeight / 10);
 

@@ -176,7 +176,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_x(ui_gpsText, 44);
     lv_obj_set_y(ui_gpsText, 94);
     lv_obj_set_align(ui_gpsText, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_gpsText, "-999.999999\n+999.999999");
+    lv_label_set_text(ui_gpsText, "-999.999999, +999.999999");
     lv_obj_set_style_text_color(ui_gpsText, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_gpsText, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_gpsText, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_DEFAULT);
