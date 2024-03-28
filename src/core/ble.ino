@@ -148,59 +148,78 @@ void notifyGPS(NimBLERemoteCharacteristic *pRemoteCharacteristic, uint8_t *pData
 {
     std::string str = (isNotify == true) ? "Notification" : "Indication";
     str += " from ";
-    /** NimBLEAddress and NimBLEUUID have std::string operators */
     str += std::string(pRemoteCharacteristic->getRemoteService()->getClient()->getPeerAddress());
     str += ": Service = " + std::string(pRemoteCharacteristic->getRemoteService()->getUUID());
     str += ", Characteristic = " + std::string(pRemoteCharacteristic->getUUID());
-    str += ", Value = " + std::string((char *)pData, length);
+    str += ", Value = " + std::string(reinterpret_cast<char *>(pData), length);
     Serial.println(str.c_str());
-    // 2024-03-24 03:47:40,31.182604,120.666840,4.35,49.70,302.24,WNW,0
-    char *data = (char *)pData;
-    char *gps_time = strtok(data, ",");
-    Serial.print(gps_time);
-    lv_label_set_text_fmt(ui_gpsTime, "%s", gps_time);
+
+    // 使用 strtok_r 替换 strtok，以避免破坏原始数据
+    char *data = reinterpret_cast<char *>(pData);
+    char *saveptr;
+    char *token = strtok_r(data, ",", &saveptr);
+    if (token != nullptr)
+    {
+        Serial.print(token);
+        lv_label_set_text_fmt(ui_gpsTime, "%s", token);
+    }
     Serial.print("\t");
 
-    char *lat = strtok(NULL, ",");
-    Serial.print(lat);
-    char *lng = strtok(NULL, ",");
-    Serial.print(lng);
-    lv_label_set_text_fmt(ui_gpsText, "%s\n%s", lat, lng);
+    token = strtok_r(nullptr, ",", &saveptr);
+    if (token != nullptr)
+    {
+        Serial.print(token);
+        char *lat = token;
+        token = strtok_r(nullptr, ",", &saveptr);
+        if (token != nullptr)
+        {
+            Serial.print(token);
+            char *lng = token;
+            lv_label_set_text_fmt(ui_gpsText, "%s, %s", lat, lng);
+        }
+    }
     Serial.print("\t");
 
-    char *speed = strtok(NULL, ",");
-    Serial.print(speed);
-    Serial.print("\t");
-    speed_dashboard_without_time(atof(speed));
+    token = strtok_r(nullptr, ",", &saveptr);
+    if (token != nullptr)
+    {
+        Serial.print(token);
+        Serial.print("\t");
+        speed_dashboard_without_time(atof(token));
+    }
 
-    // gps_altitude
-    char *altitude = strtok(NULL, ",");
-    Serial.print(altitude);
-    Serial.print("\t");
-    lv_label_set_text_fmt(ui_altitudeText, "%sm", altitude);
+    token = strtok_r(nullptr, ",", &saveptr);
+    if (token != nullptr)
+    {
+        Serial.print(token);
+        Serial.print("\t");
+        lv_label_set_text_fmt(ui_altitudeText, "%sm", token);
+    }
 
-    char *course = strtok(NULL, ",");
+    token = strtok_r(nullptr, ",", &saveptr);
+    if (token != nullptr)
+    {
+        double course_double = atof(token);
+        int32_t course_int = (int32_t)course_double;
+        Serial.print(course_int);
+        Serial.print("\t");
+        lv_img_set_angle(ui_course, course_int);
+    }
 
-    // 将字符串转换为 double 类型的数值
-    double course_double = atof(course);
-    Serial.print(course_double);
-    Serial.print("\t");
-    // 将 double 类型的数值转换为 int32_t 类型
-    int32_t course_int = (int32_t)course_double;
+    token = strtok_r(nullptr, ",", &saveptr);
+    if (token != nullptr)
+    {
+        Serial.print(token);
+        Serial.print("\t");
+        lv_label_set_text_fmt(ui_courseText, "%s", token);
+    }
 
-    // 设置图像旋转角度
-    lv_img_set_angle(ui_course, course_int);
-
-    // gps_course_string
-    char *course_string = strtok(NULL, ",");
-    Serial.print(course_string);
-    Serial.print("\t");
-    lv_label_set_text_fmt(ui_courseText, "%s", course_string);
-
-    // gps_satellites
-    char *satellites = strtok(NULL, ",");
-    Serial.print(satellites);
-    lv_label_set_text_fmt(ui_satellitesText, "%s", satellites);
+    token = strtok_r(nullptr, ",", &saveptr);
+    if (token != nullptr)
+    {
+        Serial.print(token);
+        lv_label_set_text_fmt(ui_satellitesText, "%s", token);
+    }
 
     Serial.println("\tDone with this device!");
 }
