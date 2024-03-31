@@ -93,7 +93,6 @@ static void lv_demo_text()
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);         // 居中显示
     lv_timer_handler();
     delay(2000);
-    lv_obj_clean(label);
 }
 
 void LVSetup()
