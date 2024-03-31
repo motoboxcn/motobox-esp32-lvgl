@@ -22,5 +22,7 @@ void loop()
     // put your main code here, to run repeatedly:
     // 读取蓝牙数据
     loopBLE();
-    lv_flash_screen(5);
+    lv_tick_inc(5); /* update the tick for LittlevGL */
+    lv_task_handler();
+    delay(5);
 }
