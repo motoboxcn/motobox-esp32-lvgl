@@ -128,6 +128,7 @@ class AdvertisedDeviceCallbacks : public NimBLEAdvertisedDeviceCallbacks
 /** Notification / Indication receiving handler callback */
 void notifyGYRO(NimBLERemoteCharacteristic *pRemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify)
 {
+    lv_task_handler();
     std::string str = (isNotify == true) ? "Notification" : "Indication";
     str += " from ";
     /** NimBLEAddress and NimBLEUUID have std::string operators */
@@ -146,6 +147,7 @@ void notifyGYRO(NimBLERemoteCharacteristic *pRemoteCharacteristic, uint8_t *pDat
 
 void notifyGPS(NimBLERemoteCharacteristic *pRemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify)
 {
+    lv_task_handler();
     std::string str = (isNotify == true) ? "Notification" : "Indication";
     str += " from ";
     str += std::string(pRemoteCharacteristic->getRemoteService()->getClient()->getPeerAddress());
@@ -203,7 +205,8 @@ void notifyGPS(NimBLERemoteCharacteristic *pRemoteCharacteristic, uint8_t *pData
         int32_t course_int = (int32_t)course_double;
         Serial.print(course_int);
         Serial.print("\t");
-        lv_img_set_angle(ui_course, course_int);
+        lv_img_set_angle(ui_course, course_int * 10);
+        // lv_label_set_text_fmt(ui_courseText, "%d", course_int);
     }
 
     token = strtok_r(nullptr, ",", &saveptr);

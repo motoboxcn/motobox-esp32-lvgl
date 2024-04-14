@@ -162,16 +162,6 @@ void ui_Screen1_screen_init(void)
     // lv_obj_add_flag(ui_bettery, LV_OBJ_FLAG_ADV_HITTEST);  /// Flags
     // lv_obj_clear_flag(ui_bettery, LV_OBJ_FLAG_SCROLLABLE); /// Flags
 
-    // ui_wifi = lv_img_create(ui_Screen1);
-    // lv_img_set_src(ui_wifi, &ui_img_953604683);
-    // lv_obj_set_width(ui_wifi, LV_SIZE_CONTENT);  /// 1
-    // lv_obj_set_height(ui_wifi, LV_SIZE_CONTENT); /// 1
-    // lv_obj_set_x(ui_wifi, 112);
-    // lv_obj_set_y(ui_wifi, -96);
-    // lv_obj_set_align(ui_wifi, LV_ALIGN_CENTER);
-    // lv_obj_add_flag(ui_wifi, LV_OBJ_FLAG_ADV_HITTEST);  /// Flags
-    // lv_obj_clear_flag(ui_wifi, LV_OBJ_FLAG_SCROLLABLE); /// Flags
-
     ui_gps = lv_img_create(ui_Screen1);
     lv_img_set_src(ui_gps, &ui_img_weixing_png);
     lv_obj_set_width(ui_gps, LV_SIZE_CONTENT);     /// 1
@@ -184,6 +174,17 @@ void ui_Screen1_screen_init(void)
     lv_obj_add_flag(ui_gps, LV_OBJ_FLAG_ADV_HITTEST);  /// Flags
     lv_obj_clear_flag(ui_gps, LV_OBJ_FLAG_SCROLLABLE); /// Flags
 
+    ui_ble_nu = lv_label_create(ui_Screen1);
+    lv_obj_set_width(ui_ble_nu, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height(ui_ble_nu, LV_SIZE_CONTENT); /// 1
+    lv_obj_set_x(ui_ble_nu, -ui_gps_x);
+    lv_obj_set_y(ui_ble_nu, ui_gps_y);
+    lv_obj_set_align(ui_ble_nu, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_ble_nu, "0");
+    lv_obj_set_style_text_color(ui_ble_nu, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_ble_nu, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_ble_nu, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_DEFAULT);
+
     ui_satellitesText = lv_label_create(ui_Screen1);
     lv_obj_set_width(ui_satellitesText, LV_SIZE_CONTENT);  /// 1
     lv_obj_set_height(ui_satellitesText, LV_SIZE_CONTENT); /// 1
@@ -194,6 +195,16 @@ void ui_Screen1_screen_init(void)
     lv_obj_set_style_text_color(ui_satellitesText, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_satellitesText, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_satellitesText, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    // ui_wifi = lv_img_create(ui_Screen1);
+    // lv_img_set_src(ui_wifi, &ui_img_953604683);
+    // lv_obj_set_width(ui_wifi, LV_SIZE_CONTENT);  /// 1
+    // lv_obj_set_height(ui_wifi, LV_SIZE_CONTENT); /// 1
+    // lv_obj_set_x(ui_wifi, -ui_gps_x);
+    // lv_obj_set_y(ui_wifi, ui_gps_y);
+    // lv_obj_set_align(ui_wifi, LV_ALIGN_CENTER);
+    // lv_obj_add_flag(ui_wifi, LV_OBJ_FLAG_ADV_HITTEST);  /// Flags
+    // lv_obj_clear_flag(ui_wifi, LV_OBJ_FLAG_SCROLLABLE); /// Flags
 
     ui_gpsText = lv_label_create(ui_Screen1);
     lv_obj_set_width(ui_gpsText, LV_SIZE_CONTENT);  /// 1

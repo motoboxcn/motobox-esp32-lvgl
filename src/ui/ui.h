@@ -45,6 +45,7 @@ extern "C"
   extern lv_obj_t *ui_bettery;
   extern lv_obj_t *ui_gpsText;
   extern lv_obj_t *ui_satellitesText;
+  extern lv_obj_t *ui_ble_nu;
   extern lv_obj_t *ui_hdopNuText;
   extern lv_obj_t *ui____initial_actions0;
 

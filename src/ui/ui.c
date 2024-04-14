@@ -28,6 +28,7 @@ lv_obj_t *ui_courseText;
 lv_obj_t *ui_bettery;
 lv_obj_t *ui_gpsText;
 lv_obj_t *ui_satellitesText;
+lv_obj_t *ui_ble_nu;
 // lv_obj_t *ui_hdopNuText;
 lv_obj_t *ui____initial_actions0;
 const lv_img_dsc_t *ui_imgset_ai[1] = {&ui_img_ai70_png};

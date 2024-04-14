@@ -2,7 +2,6 @@
 // #include "../lib/TFT_eSPI/User_Setup.h"
 #include "../ui/ui.h"
 
-#define SPEED_LOG 0
 static const uint16_t screenWidth = TFT_HEIGHT;
 static const uint16_t screenHeight = TFT_WIDTH;
 
@@ -10,6 +9,8 @@ static lv_disp_draw_buf_t draw_buf;
 static lv_color_t buf[screenWidth * screenHeight / 10];
 
 TFT_eSPI tft = TFT_eSPI(); /* TFT instance */
+
+int TFT_ROTATION = 3; // TFT显示屏旋转角度
 
 /* Display flushing */
 static void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p)
@@ -23,14 +24,6 @@ static void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_col
     tft.endWrite();
 
     lv_disp_flush_ready(disp_drv);
-}
-
-// 刷新仪表盘
-void lv_flash_screen(uint32_t time)
-{
-    lv_timer_handler();
-    delay(time);
-    lv_tick_inc(time);
 }
 
 void speed_dashboard_without_time(double speed)
@@ -61,13 +54,17 @@ void speed_dashboard_without_time(double speed)
 // 超过 120，arc 变红色，label 变红色
 void speed_dashboard(double speed, double time)
 {
-#if SPEED_LOG
-    Serial.println(speed);
-#endif
+    lv_task_handler();
     speed_dashboard_without_time(speed);
-    lv_flash_screen(time);
+    // TOOD: 开启下面会导致初始化速度变慢。
+    // lv_img_set_angle(ui_roll, speed);
+    // lv_label_set_text_fmt(ui_rollText, "%d°", int(speed));
+    // lv_img_set_angle(ui_course, speed * 10);
+    // lv_label_set_text_fmt(ui_courseText, "%d°", int(speed));
+    lv_tick_inc(time);
 }
 
+// 动画仪表展示。
 void ShowSpeed()
 {
     // 初始化仪表盘
@@ -85,15 +82,15 @@ void ShowSpeed()
     speed_dashboard(0, 2);
 }
 
-static void lv_demo_text()
+static void lv_demo_text(String txt)
 {
     /*Create a simple text, background is back,text is white*/
     lv_obj_t *label = lv_label_create(lv_scr_act());
-    lv_label_set_text(label, "Hello Ardino and LVGL!"); // 设置文本
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);         // 居中显示
+    lv_label_set_text(label, txt.c_str());      // 设置文本
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0); // 居中显示
     lv_timer_handler();
+    lv_tick_inc(1000);
     delay(2000);
-    lv_obj_clean(label);
 }
 
 void LVSetup()
@@ -105,8 +102,8 @@ void LVSetup()
 
     lv_init();
 
-    tft.begin();        // 初始化 TFT
-    tft.setRotation(1); // 设置为横屏模式
+    tft.begin();                   // 初始化 TFT
+    tft.setRotation(TFT_ROTATION); // 设置为横屏模式
     // tft.fillScreen(TFT_WHITE);
 
     lv_disp_draw_buf_init(&draw_buf, buf, NULL, screenWidth * screenHeight / 10);
@@ -122,9 +119,31 @@ void LVSetup()
     lv_disp_drv_register(&disp_drv);
 
     /* Create simple label */
-    lv_demo_text();
+    // lv_demo_text(LVGL_Arduino);
+
+    ui_init();
+    // lv_refr_now(NULL);
+
+    // ShowSpeed();
 
     Serial.println("Setup LVGL done");
+}
+
+void reloadTFT()
+{
+    tft.fillScreen(TFT_WHITE);
+    // 设置 TFT 翻转
+    if (TFT_ROTATION == 3)
+    {
+        TFT_ROTATION = 1;
+    }
+    else
+    {
+        TFT_ROTATION = 3;
+    }
+    // 重新初始化 TFT，设置 TFT 翻转，重新绘制 LVGL，重新初始化 UI
+    LVSetup();
+    Serial.println("Reload LVGL done");
 }
 
 void ui_wifi_connect_off()
@@ -174,4 +193,15 @@ void speed_demon()
 void speed_demon_task()
 {
     speed_dashboard_without_time(random(0, 299));
+}
+
+// 隐藏蓝牙连接状态
+void show_ble_disconnected()
+{
+    lv_label_set_text_fmt(ui_ble_nu, "-");
+}
+
+void show_ble_connected()
+{
+    lv_label_set_text_fmt(ui_ble_nu, "+");
 }
